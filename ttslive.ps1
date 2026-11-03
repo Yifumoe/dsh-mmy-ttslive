@@ -83,7 +83,9 @@ function Save-State {
 }
 
 function Place-Window($win) {
-  $wa = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+  # WPF 的 Left/Top 是 DIP，WinForms Screen.WorkingArea 是物理像素；
+  # 125% 缩放下差 1.25 倍，会把窗口算到屏幕外（2026-11-04 踩到）。
+  $wa = [System.Windows.SystemParameters]::WorkArea
   $ww = [double]$win.Width
   $wh = [double]$win.Height
   if ($null -ne $script:state.left -and $null -ne $script:state.top) {
@@ -746,7 +748,7 @@ function Show-Caption($data) {
 $script:lastShown = [DateTime]::Now
   # Size to content in one step: no intermediate shrink, so it does not flicker.
   try {
-    $wa = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+    $wa = [System.Windows.SystemParameters]::WorkArea
     $baseH = [double]$script:baseH
     if ($baseH -le 0) { $baseH = 118.0 }
     $w.UpdateLayout()
