@@ -1,0 +1,184 @@
+/* dsh-mmy-ttslive · 绫波丽冷调字幕样式
+   颜色与 tools/style-tokens.mjs 保持一致；改风格先改那边，再同步这里。 */
+:root {
+  --bg: #EFF6FA;
+  --card: #FAFDFE;
+  --brand: #176B91;
+  --ink: #203849;
+  --ink2: #476173;
+  --ink3: #718998;
+  --line: #28698a29;
+  --line-soft: #28698a14;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+  color: var(--ink);
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.stage.on { opacity: 1; }
+
+.panel { display: none; }
+body[data-skin="A"] .panelA { display: flex; }
+body[data-skin="B"] .panelB { display: block; }
+
+/* ---------- A · 通栏条幅 960×118 ---------- */
+.panelA {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  padding: 0 22px;
+  background: rgba(239, 246, 250, .94);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+  -webkit-app-region: drag;
+}
+.panelA::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--brand);
+}
+.panelA .av {
+  width: 54px; height: 54px;
+  border: 1px solid #28698a40;
+  object-fit: cover;
+  flex: none;
+  margin-right: 16px;
+}
+.panelA .bodyA { flex: 1; min-width: 0; }
+
+.who {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: .22em;
+  color: var(--ink3);
+  margin-bottom: 5px;
+}
+.who b { color: var(--brand); font-weight: 600; margin-right: 2px; }
+.slash { margin: 0 6px; }
+.live {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: 10px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .18em;
+}
+.dot {
+  width: 6px; height: 6px;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px #176b9122;
+  animation: breath 2.4s ease-in-out infinite;
+}
+@keyframes breath { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+
+.txA {
+  font-size: 20px;
+  line-height: 1.5;
+  height: 60px;
+  overflow: hidden;
+  letter-spacing: .01em;
+}
+.panelA .prog {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--line-soft);
+}
+.panelA .prog i {
+  display: block;
+  width: 0; height: 2px;
+  background: var(--brand);
+  transition: width .3s ease;
+}
+
+/* ---------- B · 悬浮卡 720×190 ---------- */
+.card {
+  position: absolute;
+  inset: 0;
+  padding: 20px 26px 18px;
+  background:
+    linear-gradient(#28698a06 1px, transparent 1px) 0 0 / 100% 26px,
+    linear-gradient(90deg, #28698a06 1px, transparent 1px) 0 0 / 26px 100%,
+    rgba(250, 253, 254, .97);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+  -webkit-app-region: drag;
+}
+.card::before, .card::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 2px solid var(--brand);
+}
+.card::before { left: -1px; top: -1px; border-right: 0; border-bottom: 0; }
+.card::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+
+.hd {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.no {
+  font: 10px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .2em;
+  color: #fff;
+  background: var(--brand);
+  padding: 4px 7px;
+}
+.nm { font-size: 11px; letter-spacing: .26em; color: var(--ink2); }
+.tm {
+  margin-left: auto;
+  font: 10px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .1em;
+  color: var(--ink3);
+}
+.txB {
+  font-size: 21px;
+  line-height: 1.62;
+  height: 102px;
+  overflow: hidden;
+}
+.ft {
+  position: absolute;
+  left: 26px; right: 26px; bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.track { flex: 1; height: 1px; background: var(--line-soft); position: relative; }
+.track i {
+  position: absolute;
+  left: 0; top: 0;
+  height: 1px;
+  width: 0;
+  background: var(--brand);
+  transition: width .3s ease;
+}
+.seg {
+  font: 10px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .16em;
+  color: var(--ink3);
+}

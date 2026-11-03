@@ -1,0 +1,144 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ttslive-b" Width="720" Height="190"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True" SnapsToDevicePixels="True"
+        WindowStartupLocation="Manual">
+  <Border x:Name="Bg" Background="#F7FBFD" BorderBrush="#28698A40" BorderThickness="1">
+    <Grid>
+      <Grid.Background>
+        <DrawingBrush TileMode="Tile" Viewport="0,0,24,24" ViewportUnits="Absolute">
+          <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="Transparent">
+              <GeometryDrawing.Pen>
+                <Pen Brush="#28698A0F" Thickness="0.5"/>
+              </GeometryDrawing.Pen>
+              <GeometryDrawing.Geometry>
+                <GeometryGroup>
+                  <LineGeometry StartPoint="0,0" EndPoint="24,0"/>
+                  <LineGeometry StartPoint="0,0" EndPoint="0,24"/>
+                </GeometryGroup>
+              </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+          </DrawingBrush.Drawing>
+        </DrawingBrush>
+      </Grid.Background>
+
+      <Border Width="18" Height="18" BorderBrush="#0D4F68" BorderThickness="2,2,0,0"
+              HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6"/>
+      <Border Width="18" Height="18" BorderBrush="#0D4F68" BorderThickness="0,2,2,0"
+              HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6"/>
+      <Border Width="18" Height="18" BorderBrush="#0D4F68" BorderThickness="2,0,0,2"
+              HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,6,6,8"/>
+      <Border Width="18" Height="18" BorderBrush="#0D4F68" BorderThickness="0,0,2,2"
+              HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6,6,6,8"/>
+
+      <Grid x:Name="BodyGrid" Margin="26,14,26,12">
+        <Grid.RowDefinitions>
+          <RowDefinition x:Name="HeadRow" Height="22"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition x:Name="FootRow" Height="26"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" x:Name="HeadB">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <Ellipse x:Name="AvatarB" Width="18" Height="18" VerticalAlignment="Center"/>
+            <TextBlock Text="EVE" FontSize="10" FontWeight="SemiBold" Foreground="#0D4F68"
+                       VerticalAlignment="Center" Margin="7,0,0,0"/>
+            <TextBlock x:Name="BuildB" Text="· 0012" FontSize="10" Foreground="#718998"
+                       VerticalAlignment="Center" Margin="3,0,0,0"/>
+            <Border Background="#176b9114" BorderBrush="#28698A2E" BorderThickness="1"
+                    Padding="5,0" Margin="8,1,0,0" VerticalAlignment="Center">
+              <TextBlock Text="台词" FontSize="9" Foreground="#23799D"/>
+            </Border>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Ellipse x:Name="LiveDotB" Width="6" Height="6" Fill="#C2263F" VerticalAlignment="Center"/>
+            <TextBlock Text="LIVE" FontSize="9" Foreground="#C2263F" Margin="5,0,8,0" VerticalAlignment="Center"/>
+            <Button x:Name="BtnMin" Content="—" Width="22" Height="16" FontSize="11"
+                    Foreground="#718998" Background="Transparent" BorderThickness="0"
+                    Padding="0" Cursor="Hand" ToolTip="最小化到托盘"/>
+            <Button x:Name="BtnClose" Content="&#x2715;" Width="22" Height="16" FontSize="9"
+                    Foreground="#718998" Background="Transparent" BorderThickness="0"
+                    Padding="0" Cursor="Hand" Margin="2,0,0,0" ToolTip="关闭字幕窗"/>
+          </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0">
+          <TextBlock x:Name="CaptionPrev" Text="" FontSize="11" Foreground="#8FA8B6"
+                     TextTrimming="CharacterEllipsis" Margin="0,0,0,2"/>
+          <TextBlock x:Name="CaptionB" Text="字幕在这里。"
+                     FontSize="19" Foreground="#203849" TextWrapping="Wrap"
+                     LineHeight="26" MaxHeight="150"/>
+          <TextBlock x:Name="CaptionNext" Text="" FontSize="11" Foreground="#8FA8B6"
+                     TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
+        </StackPanel>
+
+        <Grid x:Name="IdleRowB" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <Ellipse x:Name="IdleAvatarB" Grid.Column="0" Width="20" Height="20"
+                   VerticalAlignment="Center" Margin="0,0,7,0"/>
+          <TextBlock x:Name="IdleTagB" Grid.Column="1" Text="上一句" FontSize="10"
+                     Foreground="#8FA8B6" VerticalAlignment="Center" Margin="0,0,8,0"/>
+          <TextBlock x:Name="IdleTextB" Grid.Column="2" Text="" FontSize="13"
+                     Foreground="#476173" VerticalAlignment="Center"
+                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+          <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+            <TextBlock x:Name="IdleHintB" Text="已收起 · 静默 3.0s" FontSize="9"
+                       Foreground="#8FA8B6" VerticalAlignment="Center"/>
+            <TextBlock x:Name="IdleCounterB" Text="01 / 01" FontSize="9"
+                       Foreground="#8FA8B6" VerticalAlignment="Center" Margin="8,0,0,0"/>
+          </StackPanel>
+        </Grid>
+
+        <Grid x:Name="AxisRow" Grid.Row="2" Margin="0,4,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="72"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <StackPanel x:Name="Wave" Grid.Column="0" Orientation="Horizontal"
+                      VerticalAlignment="Center" HorizontalAlignment="Left"/>
+          <Canvas x:Name="Axis" Grid.Column="1" Height="22" Margin="0,0,10,0"
+                  VerticalAlignment="Center" ClipToBounds="True"/>
+          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock x:Name="TimeText" Text="00:00.0 / 00:00.0" FontSize="10"
+                       Foreground="#718998" VerticalAlignment="Center"/>
+            <Border Background="#176b9110" BorderBrush="#28698A26" BorderThickness="1"
+                    Padding="4,0" Margin="6,0,0,0" VerticalAlignment="Center">
+              <TextBlock x:Name="SpeedText" Text="1.12x" FontSize="9" Foreground="#23799D"/>
+            </Border>
+            <TextBlock x:Name="CounterB" Text="01 / 01" FontSize="10" Foreground="#718998"
+                       Margin="8,0,0,0" VerticalAlignment="Center"/>
+          </StackPanel>
+        </Grid>
+      </Grid>
+          <Thumb x:Name="Grip" Width="18" Height="18" HorizontalAlignment="Right"
+             VerticalAlignment="Bottom" Background="Transparent" Cursor="SizeNWSE">
+            <Thumb.Template>
+              <ControlTemplate TargetType="Thumb">
+                <Grid Background="Transparent">
+                  <Path Data="M18,11 L18,18 L11,18" Stroke="#176B91" StrokeThickness="1.4"/>
+                </Grid>
+              </ControlTemplate>
+            </Thumb.Template>
+            <Thumb.Style>
+              <Style TargetType="Thumb">
+                <Setter Property="Opacity" Value="0"/>
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.5"/>
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Thumb.Style>
+          </Thumb>
+    </Grid>
+  </Border>
+</Window>

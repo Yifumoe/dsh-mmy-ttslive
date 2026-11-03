@@ -1,0 +1,16 @@
+{
+  "name": "dsh-mmy-ttslive",
+  "version": "0.1.0",
+  "private": true,
+  "description": "台词悬浮窗：把本地 TTS 正在播的每一段，同步显示成桌面字幕。两套皮肤（通栏条幅 / 悬浮卡），绫波丽冷调。",
+  "main": "main.js",
+  "scripts": {
+    "start": "node start.js",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "author": "yifu",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^38.8.6"
+  }
+}
