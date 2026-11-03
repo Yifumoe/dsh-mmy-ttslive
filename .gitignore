@@ -1,6 +1,10 @@
 node_modules/
 dist/
+out/
 *.log
+*.tmp
 state.json
 port.txt
 .cache/
+.DS_Store
+Thumbs.db

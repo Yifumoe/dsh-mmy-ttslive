@@ -1,10 +1,7 @@
 # Idempotent launcher for the caption overlay (server + WPF window).
 # Safe to call repeatedly: only starts what is missing.
-$root = 'D:\DSH-MMYMOE\dsh-mmy-ttslive'
-$node = 'D:\Program Files\nodejs\node.exe'
-$pwsh7 = Join-Path $env:LOCALAPPDATA 'Microsoft\PowerShell\7\pwsh.exe'
-$ps = 'powershell.exe'
-if (Test-Path $pwsh7) { $ps = $pwsh7 }
+# Paths are relative to this script; override node.exe with TTSLIVE_NODE.
+$root = $PSScriptRoot
 $log  = Join-Path $root '.cache\launch.log'
 
 function Log([string]$m) {
@@ -15,9 +12,36 @@ function Log([string]$m) {
   } catch {}
 }
 
+# node.exe: TTSLIVE_NODE first, then PATH, then the old hard-coded location.
+$node = $env:TTSLIVE_NODE
+if (-not $node -or -not (Test-Path $node)) {
+  $cmd = Get-Command node.exe -ErrorAction SilentlyContinue
+  if ($cmd) { $node = $cmd.Source }
+}
+if (-not $node -or -not (Test-Path $node)) {
+  $fallback = 'D:\Program Files\nodejs\node.exe'
+  if (Test-Path $fallback) { $node = $fallback }
+}
+if (-not $node) {
+  Log 'node.exe not found; set TTSLIVE_NODE or put node in PATH'
+  exit 1
+}
+
+$pwsh7 = Join-Path $env:LOCALAPPDATA 'Microsoft\PowerShell\7\pwsh.exe'
+$ps = 'powershell.exe'
+if (Test-Path $pwsh7) { $ps = $pwsh7 }
+
+# Probe the port the server wrote last time, then fall back to 7788.
+$port = 7788
+$portFile = Join-Path $root '.cache\ttslive-port.txt'
+if (Test-Path $portFile) {
+  $raw = ([IO.File]::ReadAllText($portFile)).Trim()
+  if ($raw -match '^\d+$') { $port = [int]$raw }
+}
+
 $health = $false
 try {
-  $r = Invoke-WebRequest -Uri 'http://127.0.0.1:7788/health' -TimeoutSec 1 -UseBasicParsing
+  $r = Invoke-WebRequest -Uri ('http://127.0.0.1:' + $port + '/health') -TimeoutSec 1 -UseBasicParsing
   if ($r.StatusCode -eq 200) { $health = $true }
 } catch {}
 

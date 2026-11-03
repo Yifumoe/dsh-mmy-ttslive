@@ -1,0 +1,35 @@
+name: 跑不起来 / 字幕不同步
+description: 窗口不出、服务没端口、字幕停在旧句子
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先看 README 末尾的「坑」和 `.cache/launch.log`、`.cache/ttslive.log`。
+        贴日志时从启动第一行贴起。
+  - type: textarea
+    id: what
+    attributes:
+      label: 现象
+      description: 执行了什么、期望什么、实际什么（窗口没出现 / 停在旧句子 / 端口不对……）
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: 日志
+      description: "`.cache/launch.log`、`.cache/ttslive.log`，以及 `node server.js` 的控制台输出"
+      render: text
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      placeholder: "Windows 11 / Node 22 / PowerShell 5.1 或 pwsh 7 / 端口 7788"
+    validations:
+      required: true
+  - type: input
+    id: port
+    attributes:
+      label: 实际端口
+      description: "`.cache/ttslive-port.txt` 里的数字；以及 `curl http://127.0.0.1:<端口>/state` 的返回"
