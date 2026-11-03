@@ -8,6 +8,8 @@
 - 8 方向边缘缩放（7px 内是缩放、不是拖窗）。
 - 被关掉不用手动开：`say.js` 每次说话前探一次 `/health`，不在就跑 `launch.ps1` 拉起来。设置页「语音 → 台词悬浮窗」总开关为 0 时整条链路不碰。
 
+> 语音合成本体在 [dsh-genie-tts](https://github.com/Yifumoe/dsh-genie-tts)：`say.py` 每段合成完把台词 POST 给这里。只用语音、不要字幕窗也完全没问题；这个仓库只负责显示。
+
 ## 跑起来
 
 ```bash
