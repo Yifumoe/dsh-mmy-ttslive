@@ -78,22 +78,19 @@
         <Grid x:Name="IdleRowB" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <Ellipse x:Name="IdleAvatarB" Grid.Column="0" Width="20" Height="20"
-                   VerticalAlignment="Center" Margin="0,0,7,0"/>
-          <TextBlock x:Name="IdleTagB" Grid.Column="1" Text="上一句" FontSize="10"
-                     Foreground="#5A7286" VerticalAlignment="Center" Margin="0,0,8,0"/>
-          <TextBlock x:Name="IdleTextB" Grid.Column="2" Text="" FontSize="13"
+          <TextBlock x:Name="IdleTagB" Grid.Column="0" Text="上一句" FontSize="11"
+                     Foreground="#5A7286" VerticalAlignment="Center" Margin="0,0,10,0"/>
+          <TextBlock x:Name="IdleTextB" Grid.Column="1" Text="" FontSize="13"
                      Foreground="#476173" VerticalAlignment="Center"
                      TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
-          <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
-            <TextBlock x:Name="IdleHintB" Text="已收起 · 静默 3.0s" FontSize="9"
+          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+            <TextBlock x:Name="IdleHintB" Text="已收起 · 静默 3.0s" FontSize="10"
                        Foreground="#5A7286" VerticalAlignment="Center"/>
-            <TextBlock x:Name="IdleCounterB" Text="01 / 01" FontSize="9"
-                       Foreground="#5A7286" VerticalAlignment="Center" Margin="8,0,0,0"/>
+            <TextBlock x:Name="IdleCounterB" Text="01 / 01" FontSize="10"
+                       Foreground="#5A7286" VerticalAlignment="Center" Margin="10,0,0,0"/>
           </StackPanel>
         </Grid>
 

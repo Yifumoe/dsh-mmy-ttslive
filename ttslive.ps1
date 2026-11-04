@@ -158,6 +158,11 @@ function Exit-App {
 
 function Show-History {
   Log-Line 'history: invoked'
+  # Keep a single history window: re-activate the existing one instead of opening another.
+  if ($script:histWin -and $script:histWin.IsVisible) {
+    try { $script:histWin.Activate() } catch {}
+    return
+  }
   try {
     $h = Invoke-RestMethod -Uri ('http://127.0.0.1:' + $script:port + '/history?limit=20') -TimeoutSec 2
   } catch {
@@ -194,8 +199,19 @@ function Show-History {
   $script:histWin.FindName('TxtTitle').Text = $L.history
   $script:histWin.FindName('TbHist').Text = ($lines -join "`r`n`r`n")
   $script:histWin.FindName('Head').Add_MouseLeftButtonDown({ try { $script:histWin.DragMove() } catch {} })
-  $script:histWin.FindName('BtnX').Add_Click({ try { $script:histWin.Close() } catch {} })
-  $script:histWin.Show()
+  $hw = $script:histWin
+  # Resolve the owning window from $this: a local captured by the closure may be gone after return.
+  $hw.FindName('BtnX').Add_Click({
+    try {
+      $w = [System.Windows.Window]::GetWindow($this)
+      Log-Line ('history close: win=' + $(if ($w) { $w.Title } else { 'null' }))
+      if ($w) { $w.Close() }
+    } catch { Log-Line ('history close err: ' + $_.Exception.Message) }
+  })
+  $hw.Add_Closed({
+    try { if ($script:histWin -eq $this) { $script:histWin = $null } } catch {}
+  })
+  $hw.Show()
 }
 
 function Find-Child($el, [string]$name) {
@@ -461,6 +477,8 @@ function Switch-Skin([string]$name) {
   $script:win = $new
   $new.Show()
   Apply-Opacity
+  Restore-Caption
+  if ($script:idle) { Set-Idle $true }
   if ($old) { $old.Close() }
   Save-State
   # keep since across skin switch
@@ -728,6 +746,7 @@ function Show-Caption($data) {
   $script:index = [int]$data.index
   $script:duration = [double]$data.duration
   $script:lastText = [string]$data.text
+  $script:lastData = $data
   $script:breaks = @()
   if ($null -ne $data.breaks) { $script:breaks = @($data.breaks) }
   $script:speed = 1.12
@@ -773,6 +792,23 @@ $script:lastShown = [DateTime]::Now
       Log-Line ('caption size h=' + [math]::Round($nh, 1) + ' need=' + [math]::Round($need, 1))
     }
   } catch { Log-Line ('caption size err: ' + $_.Exception.Message) }
+}
+
+# After a skin switch the new window is empty: re-apply the last caption without resetting progress.
+function Restore-Caption {
+  $d = $script:lastData
+  $w = $script:win
+  if (-not $d -or -not $w) { return }
+  $cap = $w.FindName('Caption')
+  if (-not $cap) { $cap = $w.FindName('CaptionB') }
+  if ($cap) { $cap.Text = [string]$d.text }
+  $pv = $w.FindName('CaptionPrev')
+  if ($pv) { $pv.Text = [string]$d.prev }
+  $nx = $w.FindName('CaptionNext')
+  if ($nx) { $nx.Text = [string]$d.next }
+  try { $w.UpdateLayout(); Init-Wave; Init-Axis } catch {}
+  Set-Live $script:live
+  Update-Progress
 }
 
 # --- tray icon -------------------------------------------------------------
@@ -882,6 +918,7 @@ $timer.Add_Tick({
           $script:live = $false
           Log-Line ('auto-done elapsed=' + [math]::Round($script:sw.Elapsed.TotalSeconds,2))
           Update-Progress
+          Set-Live $false
           if (-not $script:idleTimer.IsEnabled) { $script:idleTimer.Start() }
         }
       }
