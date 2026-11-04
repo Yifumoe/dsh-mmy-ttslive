@@ -44,6 +44,14 @@ DSH 里正常不用手动：`mmy_say` 说话前会自动拉起。端口默认 `7
 
 接口**没有鉴权**，只绑 `127.0.0.1`；不发 CORS 头，浏览器网页不能跨源往里推字幕，但本机任意进程仍可发 HTTP，别把端口转发到局域网。
 
+## 装完怎么验收
+
+1. `.\launch.ps1` 后 `curl http://127.0.0.1:7788/health` 返回 `{"ok":true,...}`（端口以 `.cache/ttslive-port.txt` 为准）。
+2. `curl -X POST http://127.0.0.1:7788/caption -H 'content-type: application/json' -d '{"text":"验收一句","index":1,"total":1}'` → 窗口出现字幕、`/state` 的 `seq` 加 1。
+3. `curl -X POST http://127.0.0.1:7788/clear` → `live:false`，文字留在屏上，约 3 秒后收成待机条。
+4. 把窗口拖到屏幕最下沿再重启窗口，确认整条仍在屏内、不会只剩顶边（125% 缩放下也要试）。
+5. 从 Git Bash 跑 `.\launch.ps1` 报「无法加载文件」时用 `powershell.exe -ExecutionPolicy Bypass -File .\launch.ps1`，不是脚本坏了。
+
 ## 和 TTS 接线
 
 窗口不知道音频怎么播，它只收「现在该显示哪一句」。接法只有一处：**每段音频开始时 POST 一次 `/caption`**。
@@ -74,7 +82,8 @@ state.json           窗口位置、皮肤、透明度（运行时生成，已 g
 颜色、字号沿用宿主工作区的 `tools/style-tokens.mjs`（绫波丽冷调；不在本仓库），实际落点是 `ui/skin-a.xaml` / `ui/skin-b.xaml`：
 
 - 底：A `#F4F9FC` / B `#F7FBFD`；主色 `#176B91`，深字 `#0D4F68`
-- 文本 `#203849` / `#476173` / `#718998`
+- 文本 `#203849` / `#476173` / `#556C7F`（小字，对 `#F4F9FC` 对比度 5.16:1）；次要提示 `#5A7286`（4.74:1）
+- 窗口每 5 秒写一次 `.cache/window-alive.txt` 心跳；宿主 `say.js` 靠它区分「服务活着但窗口被关了」，好重新拉起
 - 发丝线一律青蓝 alpha（`#28698A0F` / `#28698A30` / `#28698A40`），不用中性灰；直角不用圆角，靠发丝线分层不靠投影
 - `renderer/styles.css` 里那套 `#EFF6FA` / `#FAFDFE` 是旧 Electron 试验用色（相关文件已移除），不代表现行窗口
 

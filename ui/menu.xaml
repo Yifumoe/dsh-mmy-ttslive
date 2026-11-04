@@ -30,7 +30,7 @@
     <Style x:Key="IconText" TargetType="TextBlock">
       <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
       <Setter Property="FontSize" Value="9"/>
-      <Setter Property="Foreground" Value="#718998"/>
+      <Setter Property="Foreground" Value="#556C7F"/>
       <Setter Property="HorizontalAlignment" Value="Center"/>
       <Setter Property="Margin" Value="0,3,0,0"/>
     </Style>

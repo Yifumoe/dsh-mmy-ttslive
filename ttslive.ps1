@@ -847,6 +847,14 @@ $script:idleTick.Add_Tick({ try {
     if ($h) { $h.Text = ($L.idlePrefix + (' {0:0.0}s' -f $script:idleSw.Elapsed.TotalSeconds)) }
   } catch {} })
 $script:idleTick.Start()
+
+# 心跳：say.js 靠这个文件判断「服务活着但窗口被关了」，好重新拉起
+$script:aliveFile = Join-Path $root '.cache\window-alive.txt'
+$script:aliveTimer = New-Object Windows.Threading.DispatcherTimer
+$script:aliveTimer.Interval = [TimeSpan]::FromSeconds(5)
+$script:aliveTimer.Add_Tick({ try { [IO.File]::WriteAllText($script:aliveFile, [DateTime]::Now.ToString('o')) } catch {} })
+$script:aliveTimer.Start()
+try { [IO.File]::WriteAllText($script:aliveFile, [DateTime]::Now.ToString('o')) } catch {}
 Set-Live $false
 
 $timer = New-Object System.Windows.Threading.DispatcherTimer

@@ -46,7 +46,7 @@
             <Ellipse x:Name="AvatarB" Width="18" Height="18" VerticalAlignment="Center"/>
             <TextBlock Text="EVE" FontSize="10" FontWeight="SemiBold" Foreground="#0D4F68"
                        VerticalAlignment="Center" Margin="7,0,0,0"/>
-            <TextBlock x:Name="BuildB" Text="· 0012" FontSize="10" Foreground="#718998"
+            <TextBlock x:Name="BuildB" Text="· 0012" FontSize="10" Foreground="#556C7F"
                        VerticalAlignment="Center" Margin="3,0,0,0"/>
             <Border Background="#176b9114" BorderBrush="#28698A2E" BorderThickness="1"
                     Padding="5,0" Margin="8,1,0,0" VerticalAlignment="Center">
@@ -57,21 +57,21 @@
             <Ellipse x:Name="LiveDotB" Width="6" Height="6" Fill="#C2263F" VerticalAlignment="Center"/>
             <TextBlock Text="LIVE" FontSize="9" Foreground="#C2263F" Margin="5,0,8,0" VerticalAlignment="Center"/>
             <Button x:Name="BtnMin" Content="—" Width="22" Height="16" FontSize="11"
-                    Foreground="#718998" Background="Transparent" BorderThickness="0"
+                    Foreground="#556C7F" Background="Transparent" BorderThickness="0"
                     Padding="0" Cursor="Hand" ToolTip="最小化到托盘"/>
             <Button x:Name="BtnClose" Content="&#x2715;" Width="22" Height="16" FontSize="9"
-                    Foreground="#718998" Background="Transparent" BorderThickness="0"
+                    Foreground="#556C7F" Background="Transparent" BorderThickness="0"
                     Padding="0" Cursor="Hand" Margin="2,0,0,0" ToolTip="关闭字幕窗"/>
           </StackPanel>
         </Grid>
 
         <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0">
-          <TextBlock x:Name="CaptionPrev" Text="" FontSize="11" Foreground="#8FA8B6"
+          <TextBlock x:Name="CaptionPrev" Text="" FontSize="11" Foreground="#5A7286"
                      TextTrimming="CharacterEllipsis" Margin="0,0,0,2"/>
           <TextBlock x:Name="CaptionB" Text="字幕在这里。"
                      FontSize="19" Foreground="#203849" TextWrapping="Wrap"
                      LineHeight="26" MaxHeight="150"/>
-          <TextBlock x:Name="CaptionNext" Text="" FontSize="11" Foreground="#8FA8B6"
+          <TextBlock x:Name="CaptionNext" Text="" FontSize="11" Foreground="#5A7286"
                      TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
         </StackPanel>
 
@@ -85,15 +85,15 @@
           <Ellipse x:Name="IdleAvatarB" Grid.Column="0" Width="20" Height="20"
                    VerticalAlignment="Center" Margin="0,0,7,0"/>
           <TextBlock x:Name="IdleTagB" Grid.Column="1" Text="上一句" FontSize="10"
-                     Foreground="#8FA8B6" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                     Foreground="#5A7286" VerticalAlignment="Center" Margin="0,0,8,0"/>
           <TextBlock x:Name="IdleTextB" Grid.Column="2" Text="" FontSize="13"
                      Foreground="#476173" VerticalAlignment="Center"
                      TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
           <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
             <TextBlock x:Name="IdleHintB" Text="已收起 · 静默 3.0s" FontSize="9"
-                       Foreground="#8FA8B6" VerticalAlignment="Center"/>
+                       Foreground="#5A7286" VerticalAlignment="Center"/>
             <TextBlock x:Name="IdleCounterB" Text="01 / 01" FontSize="9"
-                       Foreground="#8FA8B6" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                       Foreground="#5A7286" VerticalAlignment="Center" Margin="8,0,0,0"/>
           </StackPanel>
         </Grid>
 
@@ -109,12 +109,12 @@
                   VerticalAlignment="Center" ClipToBounds="True"/>
           <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
             <TextBlock x:Name="TimeText" Text="00:00.0 / 00:00.0" FontSize="10"
-                       Foreground="#718998" VerticalAlignment="Center"/>
+                       Foreground="#556C7F" VerticalAlignment="Center"/>
             <Border Background="#176b9110" BorderBrush="#28698A26" BorderThickness="1"
                     Padding="4,0" Margin="6,0,0,0" VerticalAlignment="Center">
               <TextBlock x:Name="SpeedText" Text="1.12x" FontSize="9" Foreground="#23799D"/>
             </Border>
-            <TextBlock x:Name="CounterB" Text="01 / 01" FontSize="10" Foreground="#718998"
+            <TextBlock x:Name="CounterB" Text="01 / 01" FontSize="10" Foreground="#556C7F"
                        Margin="8,0,0,0" VerticalAlignment="Center"/>
           </StackPanel>
         </Grid>
