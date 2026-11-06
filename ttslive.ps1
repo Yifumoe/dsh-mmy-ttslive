@@ -10,6 +10,16 @@ try {
 } catch {}
 try { [void][MmyDpi]::SetProcessDPIAware() } catch {}
 
+# Click-through: WS_EX_TRANSPARENT on GWL_EXSTYLE lets the mouse fall through to
+# whatever is below the caption window. Toggled from the tray menu only, because
+# once it is on the window itself no longer receives clicks.
+try {
+  Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public static class MmyWin { [DllImport("user32.dll", EntryPoint="GetWindowLongW")] public static extern int GetWindowLong(IntPtr hWnd, int nIndex); [DllImport("user32.dll", EntryPoint="SetWindowLongW")] public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); }' -ErrorAction Stop
+} catch {}
+$script:clickThrough = $false
+$script:itClick = $null
+
+
 $root = $PSScriptRoot
 function Zh([string]$b64) { [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b64)) }
 
@@ -33,10 +43,11 @@ $L = @{
   sec     = (Zh '56eS')
   idle    = (Zh '5a2Q6Z2Z5Lit')
   idlePrefix = (Zh '5bey5pS26LW3IMK3IOmdmem7mA==')
+  clickThrough = (Zh '6byg5qCH56m/6YCP')
 }
 
 $stateFile = Join-Path $root 'state.json'
-$script:state = @{ skin = 'a'; left = $null; top = $null; opacity = 0.92; w = $null; h = $null }
+$script:state = @{ skin = 'a'; left = $null; top = $null; opacity = 0.92; w = $null; h = $null; clickThrough = $false }
 if (Test-Path $stateFile) {
   try {
     $s = [IO.File]::ReadAllText($stateFile, [Text.Encoding]::UTF8) | ConvertFrom-Json
@@ -44,10 +55,12 @@ if (Test-Path $stateFile) {
     if ($null -ne $s.left) { $script:state.left = [double]$s.left }
     if ($null -ne $s.top) { $script:state.top = [double]$s.top }
     if ($null -ne $s.opacity) { $script:state.opacity = [double]$s.opacity }
+    if ($null -ne $s.clickThrough) { $script:state.clickThrough = [bool]$s.clickThrough }
   } catch {}
 }
 $script:skin = $script:state.skin
 $script:opacity = [double]$script:state.opacity
+$script:clickThrough = [bool]$script:state.clickThrough
 if ($script:opacity -le 0 -or $script:opacity -gt 1) { $script:opacity = 0.92 }
 
 $portFile = Join-Path $root '.cache\ttslive-port.txt'
@@ -77,6 +90,7 @@ function Save-State {
     opacity = [math]::Round([double]$script:opacity, 2)
     w       = [math]::Round([double]$script:win.Width, 0)
     h       = [math]::Round([double]$script:win.Height, 0)
+    clickThrough = [bool]$script:clickThrough
   }
   $json = $o | ConvertTo-Json -Compress
   [IO.File]::WriteAllText($stateFile, $json, (New-Object Text.UTF8Encoding($false)))
@@ -115,6 +129,28 @@ function Apply-Opacity {
   $brush.Color = [Windows.Media.Color]::FromArgb($a, [byte]$r, [byte]$g, [byte]$b)
   $brush.Freeze()
   $bg.Background = $brush
+}
+
+# Toggle WS_EX_TRANSPARENT so clicks pass through to the window below.
+# Called after Show() (a HwndSource exists only once the window is shown) and
+# again after every skin switch, because Switch-Skin builds a brand new window.
+function Set-ClickThrough([bool]$on) {
+  $w = $script:win
+  if (-not $w) { return }
+  try {
+    $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($w)).Handle
+    if ($hwnd -eq [IntPtr]::Zero) { return }
+    $ex = [MmyWin]::GetWindowLong($hwnd, -20)
+    if ($on) { $ex = $ex -bor 0x20 } else { $ex = $ex -band (-bnot 0x20) }
+    [void][MmyWin]::SetWindowLong($hwnd, -20, $ex)
+    $script:clickThrough = $on
+    $script:state.clickThrough = $on
+    if ($script:itClick) { $script:itClick.Checked = $on }
+    Save-State
+    Log-Line ('click-through=' + $on + ' ex=0x' + ('{0:X}' -f $ex))
+  } catch {
+    Log-Line ('click-through err: ' + $_.Exception.Message)
+  }
 }
 
 function Set-Live([bool]$on) {
@@ -477,6 +513,7 @@ function Switch-Skin([string]$name) {
   $script:win = $new
   $new.Show()
   Apply-Opacity
+  if ($script:clickThrough) { Set-ClickThrough $true }
   Restore-Caption
   if ($script:idle) { Set-Idle $true }
   if ($old) { $old.Close() }
@@ -830,6 +867,11 @@ function Init-Tray {
   $itShow.Add_Click({ Show-Window })
   $itHist = $cm.Items.Add($L.history)
   $itHist.Add_Click({ Show-History })
+  $itCT = $cm.Items.Add($L.clickThrough)
+  $itCT.CheckOnClick = $true
+  $itCT.Checked = [bool]$script:clickThrough
+  $itCT.Add_Click({ Set-ClickThrough ([bool]$this.Checked) })
+  $script:itClick = $itCT
   [void]$cm.Items.Add((New-Object System.Windows.Forms.ToolStripSeparator))
   $itExit = $cm.Items.Add($L.close)
   $itExit.Add_Click({ Exit-App })
@@ -842,6 +884,7 @@ $script:win = Create-Window $script:skin
 $script:win.Show()
 Apply-Opacity
 Init-Tray
+if ($script:clickThrough) { Set-ClickThrough $true }
 $script:since = 0
 try {
   $st = Invoke-RestMethod -Uri ('http://127.0.0.1:' + $script:port + '/state') -TimeoutSec 1
