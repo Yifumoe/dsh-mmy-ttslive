@@ -12,15 +12,23 @@ function Log([string]$m) {
   } catch {}
 }
 
-# node.exe: TTSLIVE_NODE first, then PATH, then the old hard-coded location.
+# node.exe: TTSLIVE_NODE first, then PATH, then the usual per-user / machine install dirs.
 $node = $env:TTSLIVE_NODE
 if (-not $node -or -not (Test-Path $node)) {
   $cmd = Get-Command node.exe -ErrorAction SilentlyContinue
   if ($cmd) { $node = $cmd.Source }
 }
 if (-not $node -or -not (Test-Path $node)) {
-  $fallback = 'D:\Program Files\nodejs\node.exe'
-  if (Test-Path $fallback) { $node = $fallback }
+  $pf   = $env:ProgramFiles
+  $pf86 = [Environment]::GetEnvironmentVariable('ProgramFiles(x86)')
+  $lad  = $env:LOCALAPPDATA
+  $candidates = @()
+  if ($pf)   { $candidates += (Join-Path $pf 'nodejs\node.exe') }
+  if ($pf86) { $candidates += (Join-Path $pf86 'nodejs\node.exe') }
+  if ($lad)  { $candidates += (Join-Path $lad 'Programs\nodejs\node.exe') }
+  foreach ($c in $candidates) {
+    if (Test-Path $c) { $node = $c; break }
+  }
 }
 if (-not $node) {
   Log 'node.exe not found; set TTSLIVE_NODE or put node in PATH'

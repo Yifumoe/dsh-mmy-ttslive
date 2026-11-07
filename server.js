@@ -69,8 +69,9 @@ async function route(req, res) {
     const body = await readBody(req);
     const text = String(body.text || '').trim();
     if (!text) return send(res, 400, { ok: false, error: 'empty text' });
+    console.log(`[caption] t=${Date.now()} idx=${Number(body.index || 0)}/${Number(body.total || 0)} dur=${Number(body.duration || 0)} text=${String(body.text || '').slice(0, 16)}`);
     latest = {
-      seq: (console.log(`[caption] t=${Date.now()} idx=${Number(body.index || 0)}/${Number(body.total || 0)} dur=${Number(body.duration || 0)} text=${String(body.text || '').slice(0, 16)}`), latest.seq + 1),
+      seq: latest.seq + 1,
       text,
       index: Number(body.index || 0),
       total: Number(body.total || 0),

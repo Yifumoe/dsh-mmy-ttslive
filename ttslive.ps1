@@ -97,8 +97,8 @@ function Save-State {
 }
 
 function Place-Window($win) {
-  # WPF 的 Left/Top 是 DIP，WinForms Screen.WorkingArea 是物理像素；
-  # 125% 缩放下差 1.25 倍，会把窗口算到屏幕外（2026-11-04 踩到）。
+  # WPF Left/Top are DIPs; WinForms Screen.WorkingArea is in physical pixels.
+  # At 125% scaling the 1.25x gap pushes the window off-screen (hit 2026-11-04).
   $wa = [System.Windows.SystemParameters]::WorkArea
   $ww = [double]$win.Width
   $wh = [double]$win.Height
@@ -927,7 +927,7 @@ $script:idleTick.Add_Tick({ try {
   } catch {} })
 $script:idleTick.Start()
 
-# 心跳：say.js 靠这个文件判断「服务活着但窗口被关了」，好重新拉起
+# Heartbeat: say.js reads this file to tell "server up but window closed" and relaunch.
 $script:aliveFile = Join-Path $root '.cache\window-alive.txt'
 $script:aliveTimer = New-Object Windows.Threading.DispatcherTimer
 $script:aliveTimer.Interval = [TimeSpan]::FromSeconds(5)
