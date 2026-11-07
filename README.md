@@ -46,9 +46,11 @@ DSH 里正常不用手动：`mmy_say` 说话前会自动拉起。端口默认 `7
 
 ## 装完怎么验收
 
-1. `.\launch.ps1` 后 `curl http://127.0.0.1:7788/health` 返回 `{"ok":true,...}`（端口以 `.cache/ttslive-port.txt` 为准）。
-2. `curl -X POST http://127.0.0.1:7788/caption -H 'content-type: application/json' -d '{"text":"验收一句","index":1,"total":1}'` → 窗口出现字幕、`/state` 的 `seq` 加 1。
-3. `curl -X POST http://127.0.0.1:7788/clear` → `live:false`，文字留在屏上，约 3 秒后收成待机条。
+1. `.\launch.ps1` 后 `Invoke-RestMethod http://127.0.0.1:7788/health` 返回 `ok: True`（端口以 `.cache/ttslive-port.txt` 为准）。
+2. `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:7788/caption -ContentType 'application/json' -Body '{"text":"验收一句","index":1,"total":1}'` → 窗口出现字幕、`/state` 的 `seq` 加 1。
+3. `Invoke-RestMethod -Method Post -Uri http://127.0.0.1:7788/clear` → `live: False`，文字留在屏上，约 3 秒后收成待机条。
+
+> 上面是 PowerShell 原生写法。在 Git Bash / cmd 里请用 `curl.exe`（不是 `curl`，PowerShell 里 `curl` 是 `Invoke-WebRequest` 的别名，`-X` 会报「找不到与参数名称 X 匹配的参数」）。
 4. 把窗口拖到屏幕最下沿再重启窗口，确认整条仍在屏内、不会只剩顶边（125% 缩放下也要试）。
 5. 从 Git Bash 跑 `.\launch.ps1` 报「无法加载文件」时用 `powershell.exe -ExecutionPolicy Bypass -File .\launch.ps1`，不是脚本坏了。
 
