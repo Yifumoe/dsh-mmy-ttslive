@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Node 语法
+        run: node --check server.js
+
+      - name: PowerShell 脚本纯 ASCII
+        run: node scripts/check-ascii.js
+
+      - name: PowerShell 语法解析
+        shell: pwsh
+        run: |
+          $failed = $false
+          foreach ($f in @('launch.ps1', 'ttslive.ps1')) {
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path $f), [ref]$null, [ref]$errors)
+            if ($errors.Count -gt 0) {
+              $failed = $true
+              Write-Host "::error file=$f::$($errors[0].Message)"
+              $errors | ForEach-Object { Write-Host $_ }
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: XAML 是合法 XML
+        shell: pwsh
+        run: |
+          foreach ($f in Get-ChildItem ui/*.xaml) {
+            try { [void][xml](Get-Content $f.FullName -Raw) }
+            catch { Write-Host "::error file=$($f.Name)::$_"; exit 1 }
+          }

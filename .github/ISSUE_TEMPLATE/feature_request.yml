@@ -1,0 +1,28 @@
+name: 功能建议
+description: 想要新皮肤、新接口字段、新交互
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 想要什么
+      description: 一句话说清目标场景，比如「B 皮肤想再加一个极简模式」
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么
+      description: 现在哪里不顺手；有截图或草图更好
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 影响范围
+      options:
+        - 只改皮肤（ui/*.xaml）
+        - 改窗口行为（ttslive.ps1）
+        - 改接口（server.js）
+        - 文档 / 打包
+    validations:
+      required: true

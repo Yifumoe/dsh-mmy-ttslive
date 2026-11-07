@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题
+    url: https://github.com/Yifumoe/dsh-mmy-ttslive/security/advisories/new
+    about: 疑似安全问题请走私密报告，不要开公开 issue。
+  - name: 语音合成本体
+    url: https://github.com/Yifumoe/dsh-genie-tts/issues
+    about: 合成、音色、模型相关的问题在 dsh-genie-tts 提。

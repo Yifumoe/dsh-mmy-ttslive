@@ -1,15 +1,50 @@
 {
   "name": "dsh-mmy-ttslive",
   "version": "0.1.0",
-  "private": true,
-  "description": "台词悬浮窗：把本地 TTS 正在播的每一段，同步显示成桌面字幕。两套皮肤（通栏条幅 / 悬浮卡），绫波丽冷调。",
+  "description": "台词悬浮窗（Windows-only）：把本地 TTS 正在播的每一段，同步显示成桌面字幕。两套皮肤（通栏条幅 / 悬浮卡），绫波丽冷调。",
   "license": "Apache-2.0",
   "author": "Yifumoe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yifumoe/dsh-mmy-ttslive.git"
+  },
+  "homepage": "https://github.com/Yifumoe/dsh-mmy-ttslive#readme",
+  "bugs": {
+    "url": "https://github.com/Yifumoe/dsh-mmy-ttslive/issues"
+  },
+  "keywords": [
+    "tts",
+    "subtitles",
+    "caption",
+    "overlay",
+    "wpf",
+    "powershell",
+    "windows",
+    "desktop",
+    "dsh"
+  ],
+  "files": [
+    "server.js",
+    "launch.ps1",
+    "ttslive.ps1",
+    "ui/",
+    "assets/",
+    "scripts/",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "LICENSE"
+  ],
+  "os": [
+    "win32"
+  ],
   "engines": {
     "node": ">=18"
   },
   "scripts": {
     "start": "powershell -NoProfile -ExecutionPolicy Bypass -File ./launch.ps1",
-    "start:server": "node server.js"
+    "start:server": "node server.js",
+    "check": "node --check server.js && node scripts/check-ascii.js"
   }
 }
